@@ -1,14 +1,14 @@
 import React from 'react'
 
 
-const ContactList = (props) => {
+const UserList = (props) => {
     return (
         <ul>
-            {props.contacts.map(({id, is_winner}) => {
-                return <li key={id}>{is_winner}</li>
+            {props.users.map(({id, is_winner}) => {
+                return <li key={id}>{id}</li>
             })}
         </ul>
     )
 };
 
-export default ContactList;
+export default UserList;

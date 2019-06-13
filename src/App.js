@@ -1,17 +1,17 @@
 import React from 'react';
 import axios from "axios";
-import ContactList from './components/ContactList'
+import UserList from './components/UserList'
+import Buttons from './components/Buttons'
 
 class App extends React.Component {
     state = {
         users: []
     };
 
-    componentDidMount() {
+    fetchUsers() {
         axios
             .get("/api/users")
             .then(response => {
-
                 const newUsers = response.data.map(user => {
                     return {
                         id: user.id,
@@ -21,7 +21,7 @@ class App extends React.Component {
 
                 // create a new "State" object without mutating the original State object.
                 const newState = Object.assign({}, this.state, {
-                    contacts: newUsers
+                    users: newUsers
                 });
 
                 // store the new state object in the component's state
@@ -30,10 +30,15 @@ class App extends React.Component {
             .catch(error => console.log(error));
     }
 
+    componentDidMount() {
+        this.fetchUsers();
+    }
+
     render() {
         return (
             <div className="App">
-                <ContactList contacts={this.state.users}/>
+                <Buttons/>
+                {/*<UserList users={this.state.users}/>*/}
             </div>
         );
     }

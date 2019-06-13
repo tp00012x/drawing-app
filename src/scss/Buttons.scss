@@ -1,0 +1,12 @@
+.buttons {
+  &__or:before {
+    color: black !important;
+  }
+
+  &--center {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
