@@ -1,26 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import ContactList from './components/ContactList'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+    state = {
+        users: []
+    };
+
+    componentDidMount() {
+        axios
+            .get("/api/users")
+            .then(response => {
+
+                const newUsers = response.data.map(user => {
+                    return {
+                        id: user.id,
+                        is_winner: user.name
+                    };
+                });
+
+                // create a new "State" object without mutating the original State object.
+                const newState = Object.assign({}, this.state, {
+                    contacts: newUsers
+                });
+
+                // store the new state object in the component's state
+                this.setState(newState);
+            })
+            .catch(error => console.log(error));
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <ContactList contacts={this.state.users}/>
+            </div>
+        );
+    }
 }
 
 export default App;
