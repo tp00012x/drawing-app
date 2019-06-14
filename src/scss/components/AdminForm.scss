@@ -1,0 +1,26 @@
+$background-color: #1b1c1d;
+
+.admin-form {
+  height: 100vh;
+  display: flex;
+
+  &--column {
+    &__left {
+      flex: 1;
+    }
+
+    &__right {
+      background-color: $background-color;
+      flex: 1;
+    }
+  }
+
+  &--content {
+    margin: -4rem 2rem 2rem;
+
+    &--reset-winners {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+  }
+}

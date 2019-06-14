@@ -1,18 +1,32 @@
-import '../scss/Buttons.scss';
+import '../scss/components/Buttons.scss';
 import React from 'react'
+import Button from './Button'
 
-const Buttons = () => {
+
+function Buttons(props) {
     return (
         <div className="buttons">
-            <div className="ui inverted segment buttons--center">
+            <div className="ui inverted segment center-content full-height">
                 <div className="ui large buttons">
-                    <button className="ui inverted black button">Admin</button>
-                    <div className="or buttons__or"></div>
-                    <button className="ui inverted red button">User</button>
+                    <Button
+                        styles={{color: 'black'}}
+                        handleReset={props.handleReset}
+                        params={{is_admin: true}}
+                    >
+                        Admin
+                    </Button>
+                    <div className="or buttons__or"/>
+                    <Button
+                        styles={{color: 'red'}}
+                        handleReset={props.handleReset}
+                        params={{is_user: true}}
+                    >
+                        User
+                    </Button>
                 </div>
             </div>
         </div>
     )
-};
+}
 
 export default Buttons;

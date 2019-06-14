@@ -1,13 +1,27 @@
 import React from 'react'
-
+import faker from 'faker';
 
 const UserList = (props) => {
     return (
-        <ul>
+        <div className="ui five column grid">
             {props.users.map(({id, is_winner}) => {
-                return <li key={id}>{id}</li>
+                return (
+                    is_winner &&
+                    <div className="column" key={id}>
+                        <div className="ui fluid card">
+                            <div className="image">
+                                <img src={faker.image.avatar()} alt="user avatar"/>
+                            </div>
+                            <div className="content">
+                                <a className="header" href={`/api/users/${id}`}>
+                                    User: {id}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                )
             })}
-        </ul>
+        </div>
     )
 };
 

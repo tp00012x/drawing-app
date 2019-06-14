@@ -1,0 +1,10 @@
+$background-color: #1b1c1d;
+
+.form {
+  &--content {
+    display: flex;
+    height: 20%;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}

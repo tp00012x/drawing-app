@@ -1,44 +1,25 @@
+import './scss/atomic.scss';
+import './scss/form.scss';
 import React from 'react';
-import axios from "axios";
-import UserList from './components/UserList'
-import Buttons from './components/Buttons'
+import Buttons from './components/Buttons';
+import UserForm from './components/UserForm';
+import AdminForm from './components/AdminForm'
 
 class App extends React.Component {
     state = {
-        users: []
+        is_admin: false,
+        is_user: false,
     };
 
-    fetchUsers() {
-        axios
-            .get("/api/users")
-            .then(response => {
-                const newUsers = response.data.map(user => {
-                    return {
-                        id: user.id,
-                        is_winner: user.name
-                    };
-                });
-
-                // create a new "State" object without mutating the original State object.
-                const newState = Object.assign({}, this.state, {
-                    users: newUsers
-                });
-
-                // store the new state object in the component's state
-                this.setState(newState);
-            })
-            .catch(error => console.log(error));
-    }
-
-    componentDidMount() {
-        this.fetchUsers();
-    }
-
+    handleReset = (event) => {
+        this.setState(event);
+    };
     render() {
         return (
             <div className="App">
-                <Buttons/>
-                {/*<UserList users={this.state.users}/>*/}
+                {!this.state.is_user && !this.state.is_admin && <Buttons handleReset={this.handleReset}/>}
+                {this.state.is_admin && <AdminForm handleReset={this.handleReset}/>}
+                {this.state.is_user && <UserForm handleReset={this.handleReset}/>}
             </div>
         );
     }
