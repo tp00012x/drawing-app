@@ -3,8 +3,13 @@ $background-color: #1b1c1d;
 .form {
   &--content {
     display: flex;
-    height: 20%;
+    height: 40%;
     flex-direction: column;
     justify-content: space-between;
+
+    &--message {
+      margin-top: -2rem;
+      margin-bottom: 2rem;
+    }
   }
 }

@@ -60,7 +60,7 @@ class AdminForm extends React.Component {
                             {
                                 this.state.didSelectedWinners &&
                                 <div>
-                                    <div className="admin-form--content--reset-winners">
+                                    <div className="ta-c mb-2">
                                         <ResetWinners resetWinners={this.resetWinners}/>
                                     </div>
                                     <UserList users={this.state.users}/>
