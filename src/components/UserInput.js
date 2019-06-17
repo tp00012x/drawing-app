@@ -9,18 +9,19 @@ class UserInput extends React.Component {
         isSixCharactersLong: false,
         selectedOption: 'participate',
         enableSubmit: false,
-        user: null
+        userNotFound: null,
+        userAlreadyExists: null
     };
 
     handleSubmit = async (event) => {
         event.preventDefault();
         const selectedOption = this.state.selectedOption;
+        const user = await this.getUser();
 
         if (selectedOption === "participate") {
-            this.addUser();
+            user ? this.setState({userAlreadyExists: true}) : this.addUser();
         } else if (selectedOption === "check_status") {
-            const user = await this.getUser();
-            this.props.setUser(user);
+            user === undefined ? this.setState({userNotFound: true}) : this.props.setUser(user);
         }
     };
 
@@ -40,9 +41,9 @@ class UserInput extends React.Component {
     }
 
     async getUser() {
-        //todo make sure to display error if the user doesnt exist
         return fetch(`/api/users/${this.state.code}`)
-            .then(res => res.json());
+            .then(res => res.json())
+            .catch(() => undefined); //Return undefined for farther validation if we can't find the user
     };
 
     handleOnInputChange = (event) => {
@@ -59,7 +60,27 @@ class UserInput extends React.Component {
         }
     };
 
+    renderValidationMessage() {
+        const {isAlphanumeric, inputIsNotBlank, userNotFound, userAlreadyExists} = this.state;
+
+        if (!isAlphanumeric && inputIsNotBlank) {
+            return (
+                <Message styles={{type: 'negative'}}> You must enter only Alphanumeric characters.</Message>
+            )
+        } else if (userNotFound) {
+            return (
+                <Message styles={{type: 'negative'}}>
+                    This user can't be found! Please check that the entered code is correct.
+                </Message>)
+        } else if (userAlreadyExists) {
+            return (
+                <Message styles={{type: 'negative'}}>User already exists. Please try different code!</Message>)
+        }
+    }
+
     render() {
+        const {enableSubmit} = this.state;
+
         return (
             <form method="POST" onSubmit={this.handleSubmit}>
                 <div className="ui action input">
@@ -71,18 +92,9 @@ class UserInput extends React.Component {
                         <option value="participate">Participate!</option>
                         <option value="check_status">Check status</option>
                     </select>
-                    <button className={`ui ${!this.state.enableSubmit && 'disabled'} black button`}>
-                        Submit
-                    </button>
+                    <button className={`ui ${!enableSubmit && 'disabled'} black button`}>Submit</button>
                 </div>
-                {
-                    (!this.state.isAlphanumeric && this.state.inputIsNotBlank) &&
-                    <Message
-                        styles={{type: 'negative'}}
-                    >
-                        You must enter only Alphanumeric characters
-                    </Message>
-                }
+                {this.renderValidationMessage()}
             </form>
         );
     }

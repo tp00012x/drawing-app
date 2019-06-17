@@ -17,19 +17,19 @@ class UserForm extends Component {
     renderContent() {
         if (this.state.codeSubmitted) {
             return (
-                <Message styles={{type: 'positive'}}>
-                    <p>You have entered the drawing. Good job!</p>
+                <Message styles={{type: 'violet'}}>
+                    <p>You have entered the drawing to win a Limited Edition Pokemon Card. Good luck!</p>
                 </Message>)
         } else if (this.state.user) {
             const {is_winner} = this.state.user;
 
             return is_winner ? (
                 <Message styles={{type: 'positive'}}>
-                    <p>You've won. Congratulations!</p>
+                    <p>Congratulations, You've won!</p>
                 </Message>
             ) : (
                 <Message styles={{type: 'negative'}}>
-                    <p>We apologize, but you didn't win. Please try again!</p>
+                    <p>We apologize, but you didn't win. Please try again, and good luck next time!</p>
                 </Message>
             )
         } else {
@@ -38,13 +38,16 @@ class UserForm extends Component {
                     <Message styles={{type: 'info'}}>
                         <p>Instructions:</p>
                         <ul className="list">
-                            <li>Enter 6 digit code</li>
-                            <li>All characters must be Alphanumeric</li>
+                            <li>Select from the drop down menu which action, you would like to take.</li>
+                            <li>Enter your 6 digit code to enter drawing or check status {'\u2728'}</li>
+                            <br/>
+                            <p>* All characters must be Alphanumeric</p>
                         </ul>
                     </Message>
                     <UserInput
                         codeSubmitted={() => this.setState({codeSubmitted: true})}
                         setUser={this.setUser}
+                        user={this.state.user}
                     />
                 </Fragment>)
         }
