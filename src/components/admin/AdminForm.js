@@ -1,7 +1,7 @@
-import '../scss/components/AdminForm.scss';
+import '../../scss/components/AdminForm.scss';
 import React from 'react'
 import UserList from "./UserList";
-import GoHomeButton from './GoHomeButton';
+import GoHomeButton from '../GoHomeButton';
 import ResetWinners from './ResetWinners';
 import SelectRandomWinners from './SelectRandomWinners';
 

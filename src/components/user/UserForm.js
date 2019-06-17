@@ -1,9 +1,9 @@
-import '../scss/components/UserForm.scss';
+import '../../scss/components/UserForm.scss';
 import React, { Component, Fragment } from 'react'
-import GoHomeButton from './GoHomeButton';
+import GoHomeButton from '../GoHomeButton';
 import UserInput from './UserInput';
-import Message from './Message'
-import pokemonCardPic from '../images/foiled_charizard.png'
+import Message from '../Message'
+import pokemonCardPic from '../../images/foiled_charizard.png'
 
 class UserForm extends Component {
     state = {

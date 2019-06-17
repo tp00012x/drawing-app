@@ -2,8 +2,8 @@ import './scss/atomic.scss';
 import './scss/form.scss';
 import React from 'react';
 import Buttons from './components/Buttons';
-import UserForm from './components/UserForm';
-import AdminForm from './components/AdminForm'
+import UserForm from './components/user/UserForm';
+import AdminForm from './components/admin/AdminForm'
 
 class App extends React.Component {
     state = {
