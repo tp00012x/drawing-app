@@ -60,30 +60,33 @@ class AdminForm extends React.Component {
     };
 
     render() {
+        const {handleReset} = this.props;
+        const {didSelectedWinners, users} = this.state;
+
         return (
             <div className="admin-form">
                 <div className="admin-form--column__left center-content">
                     <div className="form--content">
                         {
-                            !this.state.didSelectedWinners &&
+                            !didSelectedWinners &&
                             <SelectRandomWinners
-                                users={this.state.users}
+                                users={users}
                                 setUsers={this.setUsers}
                             />
                         }
                         <div className="admin-form--content">
                             {
-                                this.state.didSelectedWinners &&
+                                didSelectedWinners &&
                                 <div>
                                     <div className="ta-c mb-2">
                                         <ResetWinners resetWinners={this.resetWinners}/>
                                     </div>
-                                    <UserList users={this.state.users}/>
+                                    <UserList users={users}/>
                                 </div>
                             }
                         </div>
                         <div className="as-c">
-                            <GoHomeButton home={this.props.handleReset}/>
+                            <GoHomeButton home={handleReset}/>
                         </div>
                     </div>
                 </div>

@@ -1,9 +1,9 @@
 import '../../scss/components/UserForm.scss';
+import pokemonCardPic from '../../images/foiled_charizard.png'
 import React, { Component, Fragment } from 'react'
 import GoHomeButton from '../GoHomeButton';
 import UserInput from './UserInput';
 import Message from '../Message'
-import pokemonCardPic from '../../images/foiled_charizard.png'
 
 class UserForm extends Component {
     state = {
@@ -56,6 +56,8 @@ class UserForm extends Component {
     }
 
     render() {
+        const {handleReset} = this.props;
+
         return (
             <div className="user-form">
                 <div className="user-form--column__left"/>
@@ -65,7 +67,7 @@ class UserForm extends Component {
                             {this.renderContent()}
                         </div>
                         <div className="p-2">
-                            <GoHomeButton home={this.props.handleReset}/>
+                            <GoHomeButton home={handleReset}/>
                         </div>
                     </div>
                 </div>

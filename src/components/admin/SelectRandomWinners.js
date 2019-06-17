@@ -15,11 +15,13 @@ class SelectRandomWinners extends React.Component {
 
 
     render() {
+        const {setUsers} = this.props;
+
         return (
             <button
                 className="ui black button"
                 onClick={() => {
-                    this.props.setUsers(this.fetchUsers())
+                    setUsers(this.fetchUsers())
                 }}
             >
                 Select Random Winners

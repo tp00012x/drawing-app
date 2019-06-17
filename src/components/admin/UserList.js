@@ -2,9 +2,10 @@ import React from 'react'
 import faker from 'faker';
 
 const UserList = (props) => {
+    const {users} = props;
     return (
         <div className="ui five column grid">
-            {props.users.map(({id, is_winner}) => {
+            {users.map(({id, is_winner}) => {
                 return (
                     is_winner &&
                     <div className="column" key={id}>

@@ -4,13 +4,15 @@ import Button from './Button'
 
 
 function Buttons(props) {
+    const {handleReset} = props;
+
     return (
         <div className="buttons">
             <div className="ui inverted segment center-content full-height">
                 <div className="ui large buttons">
                     <Button
                         styles={{color: 'black'}}
-                        handleReset={props.handleReset}
+                        handleReset={handleReset}
                         params={{is_admin: true}}
                     >
                         Admin
@@ -18,7 +20,7 @@ function Buttons(props) {
                     <div className="or buttons__or"/>
                     <Button
                         styles={{color: 'red'}}
-                        handleReset={props.handleReset}
+                        handleReset={handleReset}
                         params={{is_user: true}}
                     >
                         User

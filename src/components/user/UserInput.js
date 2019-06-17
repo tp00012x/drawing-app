@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { Component } from 'react'
 import Message from '../Message'
 
-class UserInput extends React.Component {
+class UserInput extends Component {
     state = {
         code: null,
         isAlphanumeric: false,
@@ -17,16 +17,18 @@ class UserInput extends React.Component {
         event.preventDefault();
         const selectedOption = this.state.selectedOption;
         const user = await this.getUser();
+        const {setUser} = this.props;
 
         if (selectedOption === "participate") {
             user ? this.setState({userAlreadyExists: true}) : this.addUser();
         } else if (selectedOption === "check_status") {
-            user === undefined ? this.setState({userNotFound: true}) : this.props.setUser(user);
+            user === undefined ? this.setState({userNotFound: true}) : setUser(user);
         }
     };
 
     addUser() {
         const data = {id: this.state.code, is_winner: true};
+        const {codeSubmitted} = this.props;
 
         fetch('/api/add_user', {
             method: 'POST',
@@ -37,7 +39,7 @@ class UserInput extends React.Component {
         })
             .then(res => res.json());
 
-        this.props.codeSubmitted();
+        codeSubmitted();
     }
 
     async getUser() {
