@@ -17,7 +17,7 @@ app.get('/api/users', (req, res) => {
     res.json(users);
 });
 
-app.get('/api/users/:id', (req, res) => {
+app.get('/api/user/:id', (req, res) => {
     res.json(users.find((user) => user.id === req.params.id));
 });
 

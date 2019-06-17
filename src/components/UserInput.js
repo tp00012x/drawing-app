@@ -41,7 +41,7 @@ class UserInput extends React.Component {
     }
 
     async getUser() {
-        return fetch(`/api/users/${this.state.code}`)
+        return fetch(`/api/user/${this.state.code}`)
             .then(res => res.json())
             .catch(() => undefined); //Return undefined for farther validation if we can't find the user
     };

@@ -13,7 +13,7 @@ const UserList = (props) => {
                                 <img src={faker.image.avatar()} alt="user avatar"/>
                             </div>
                             <div className="content">
-                                <a className="header" href={`/api/users/${id}`}>
+                                <a className="header" href={`/api/user/${id}`}>
                                     User: {id}
                                 </a>
                             </div>
