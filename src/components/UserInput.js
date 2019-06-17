@@ -4,13 +4,13 @@ import Message from './Message'
 class UserInput extends React.Component {
     state = {
         code: null,
-        isAlphanumeric: null,
+        isAlphanumeric: false,
         inputIsNotBlank: false,
         isSixCharactersLong: false,
         selectedOption: 'participate',
         enableSubmit: false,
-        userNotFound: null,
-        userAlreadyExists: null
+        userNotFound: false,
+        userAlreadyExists: false
     };
 
     handleSubmit = async (event) => {
@@ -52,7 +52,7 @@ class UserInput extends React.Component {
         const isSixCharactersLong = value && value.length === 6;
         const inputIsNotBlank = Boolean(value);
 
-        this.setState({enableSubmit: false});
+        this.setState({enableSubmit: false, userAlreadyExists: false, userNotFound: false});
         this.setState({isAlphanumeric, isSixCharactersLong, inputIsNotBlank});
 
         if (inputIsNotBlank && isAlphanumeric && isSixCharactersLong) {
