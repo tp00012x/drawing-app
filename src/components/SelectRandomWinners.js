@@ -1,21 +1,18 @@
 import React from 'react'
-import axios from "axios";
 
 class SelectRandomWinners extends React.Component {
+
+    async API(url) {
+        const baseUrl = "/api/";
+        const response = await fetch(baseUrl + url);
+
+        return await response.json();
+    }
+
     fetchUsers = () => {
-        return axios
-            .get("/api/users")
-            .then(response => {
-                return response.data.map(user => {
-                        return {
-                            id: user.id,
-                            is_winner: user.is_winner
-                        }
-                    }
-                );
-            })
-            .catch(error => console.log(error));
+        return this.API('users').then(data => data);
     };
+
 
     render() {
         return (

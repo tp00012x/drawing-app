@@ -1,0 +1,10 @@
+.user-form {
+  height: 100vh;
+  display: flex; }
+  .user-form--column__left {
+    background-color: #1b1c1d;
+    flex: 1; }
+  .user-form--column__right {
+    flex: 1; }
+
+/*# sourceMappingURL=UserForm.css.map */

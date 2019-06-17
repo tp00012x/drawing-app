@@ -11,8 +11,37 @@ class AdminForm extends React.Component {
         didSelectedWinners: false,
     };
 
+    // async postUser(url) {
+    //     const baseUrl = "/api/";
+    //     const settings = {
+    //         method: 'POST',
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json',
+    //         }
+    //     };
+    //
+    //     const data = await fetch(baseUrl + url, settings)
+    //         .then(response => response.json())
+    //         .then(json => {
+    //             return json;
+    //         })
+    //         .catch(e => {
+    //             return e
+    //         });
+    //
+    //     return data;
+    //     const response = await fetch(baseUrl + url);
+    //
+    //     return await response.json();
+    // }
+
     selectRandomWinners = () => {
         this.setState({didSelectedWinners: true})
+
+        // Select random winners by sending a post request ot /api/users and setting 5 random users is_winner to true
+
+        // get the users and set the user
     };
 
     setUsers = (promise) => {
