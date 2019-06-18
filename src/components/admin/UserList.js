@@ -2,20 +2,20 @@ import React from 'react'
 import faker from 'faker';
 
 const UserList = (props) => {
-    const {users} = props;
+    const {winnersIds} = props;
+
     return (
         <div className="ui five column grid">
-            {users.map(({id, is_winner}) => {
+            {winnersIds.map((winnerId) => {
                 return (
-                    is_winner &&
-                    <div className="column" key={id}>
+                    <div className="column" key={winnerId}>
                         <div className="ui fluid card">
                             <div className="image">
                                 <img src={faker.image.avatar()} alt="user avatar"/>
                             </div>
                             <div className="content">
-                                <a className="header" href={`/api/user/${id}`}>
-                                    User: {id}
+                                <a className="header" href={`/api/participant/${winnerId}`}>
+                                    User: {winnerId}
                                 </a>
                             </div>
                         </div>

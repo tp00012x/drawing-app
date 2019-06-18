@@ -1,91 +1,74 @@
 import '../../scss/components/AdminForm.scss';
-import React from 'react'
+import React, { Component, Fragment } from 'react'
 import UserList from "./UserList";
 import GoHomeButton from '../GoHomeButton';
 import ResetWinners from './ResetWinners';
 import SelectRandomWinners from './SelectRandomWinners';
 
-class AdminForm extends React.Component {
+class AdminForm extends Component {
     state = {
-        users: [],
-        didSelectedWinners: false,
+        winnersIds: [],
+        didSelectWinners: false,
+        didResetWinners: false,
     };
 
-    // async postUser(url) {
-    //     const baseUrl = "/api/";
-    //     const settings = {
-    //         method: 'POST',
-    //         headers: {
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json',
-    //         }
-    //     };
-    //
-    //     const data = await fetch(baseUrl + url, settings)
-    //         .then(response => response.json())
-    //         .then(json => {
-    //             return json;
-    //         })
-    //         .catch(e => {
-    //             return e
-    //         });
-    //
-    //     return data;
-    //     const response = await fetch(baseUrl + url);
-    //
-    //     return await response.json();
-    // }
+    selectRandomWinners = async () => {
+        await this.generateRandomWinners();
+        const winnersIds = await this.getWinners();
 
-    selectRandomWinners = () => {
-        this.setState({didSelectedWinners: true})
-
-        // Select random winners by sending a post request ot /api/users and setting 5 random users is_winner to true
-
-        // get the users and set the user
+        winnersIds && this.setState({winnersIds: winnersIds, didSelectWinners: true});
     };
 
-    setUsers = (promise) => {
-        promise
-            .then(newUsers => {
-                const newState = Object.assign(this.state, {users: newUsers});
-                this.setState(newState);
-            })
-            .then(() => {
-                this.selectRandomWinners();
-            });
-    };
+    async generateRandomWinners() {
+        fetch('/api/generate_random_winners', {
+            method: 'PATCH',
+            headers: {
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify({randomize: true, numberOfWinners: 5}),
+        })
+            .then(res => res.json());
+    }
 
+    async getWinners() {
+        return fetch('/api/winners')
+            .then(res => res.json())
+            .catch(() => new Array(0));
+    }
+
+    // Empties out winnersIds array
     resetWinners = () => {
-        this.setState({didSelectedWinners: false})
+        fetch('/api/reset_winners', {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify({resetWinners: true}),
+        })
+            .then(res => res.json());
+
+        this.setState({didResetWinners: true})
     };
 
     render() {
         const {handleReset} = this.props;
-        const {didSelectedWinners, users} = this.state;
+        const {didSelectWinners, winnersIds, didResetWinners} = this.state;
 
         return (
             <div className="admin-form">
                 <div className="admin-form--column__left center-content">
-                    <div className="form--content">
-                        {
-                            !didSelectedWinners &&
-                            <SelectRandomWinners
-                                users={users}
-                                setUsers={this.setUsers}
-                            />
-                        }
-                        <div className="admin-form--content">
+                    <div className="d-flex flex-column">
+                        <div className="p-2">
                             {
-                                didSelectedWinners &&
-                                <div>
-                                    <div className="ta-c mb-2">
+                                (didSelectWinners && !didResetWinners)?
+                                    <Fragment>
                                         <ResetWinners resetWinners={this.resetWinners}/>
-                                    </div>
-                                    <UserList users={users}/>
-                                </div>
+                                        <UserList winnersIds={winnersIds}/>
+                                    </Fragment> :
+                                    <SelectRandomWinners selectRandomWinners={this.selectRandomWinners}/>
                             }
                         </div>
-                        <div className="as-c">
+                        <div className="p-2">
                             <GoHomeButton home={handleReset}/>
                         </div>
                     </div>

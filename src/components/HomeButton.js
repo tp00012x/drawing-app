@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Button(props) {
+function HomeButton(props) {
     const {styles, handleReset, params, children} = props;
 
     return (
@@ -15,4 +15,4 @@ function Button(props) {
     )
 }
 
-export default Button
+export default HomeButton
