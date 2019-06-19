@@ -10,7 +10,6 @@ import ResetWinners from "./ResetWinners"
 class AdminForm extends Component {
     state = {
         participants: null,
-        generatedWinners: false,
         enoughParticipants: false,
         didResetWinners: true,
         winners: null
@@ -32,9 +31,11 @@ class AdminForm extends Component {
     async setRandomWinners() {
         try {
             const data = {randomize: true, numberOfWinners: 5};
+            const {setGeneratedWinners} = this.props;
 
             await axios.patch('/api/set_random_winners', data);
-            this.setState({generatedWinners: true, didResetWinners: false});
+            setGeneratedWinners();
+            this.setState({ didResetWinners: false});
         } catch (event) {
             console.log(`Axios PATCH set random winners request failed: ${event}`);
         }
@@ -72,8 +73,8 @@ class AdminForm extends Component {
 
 
     render() {
-        const {handleReset} = this.props;
-        const {generatedWinners, enoughParticipants, participants, didResetWinners, winners} = this.state;
+        const {handleReset, generatedWinners} = this.props;
+        const {enoughParticipants, participants, didResetWinners, winners} = this.state;
 
         //TODO fix so the message doesn't appear when trying to show the user list
         return (

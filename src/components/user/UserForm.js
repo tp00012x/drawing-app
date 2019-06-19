@@ -15,15 +15,20 @@ class UserForm extends Component {
         this.setState({participant});
     };
 
+    setDidSubmitParticipant = () => {
+        this.setState({didSubmitParticipant: true})
+    } ;
+
     renderContent() {
         const {didSubmitParticipant, participant} = this.state;
+        const {generatedWinners} = this.props;
 
         if (didSubmitParticipant) {
             return (
                 <Message styles={{type: 'info'}}>
                     You have entered the drawing to win a Limited Edition Pokemon Card. Good luck!
                 </Message>)
-        } else if (participant) {
+        } else if (participant && generatedWinners) {
             return participant.is_winner ? (
                 <Message styles={{type: 'positive'}}>
                     Congratulations, You've won the Limited Edition "Foiled Charizard"
@@ -34,7 +39,7 @@ class UserForm extends Component {
                     We apologize, but you didn't win. Please try again, and good luck next time!
                 </Message>
             )
-        } else {
+        } else if (!participant) {
             return (
                 <Fragment>
                     <Message styles={{type: 'compact'}}>
@@ -47,11 +52,16 @@ class UserForm extends Component {
                         </ul>
                     </Message>
                     <UserInput
-                        didSubmitParticipant={() => this.setState({didSubmitParticipant: true})}
+                        setDidSubmitParticipant={this.setDidSubmitParticipant}
                         setParticipant={this.setParticipant}
                         participant={participant}
                     />
                 </Fragment>)
+        } else if (!generatedWinners) {
+            return (<Message styles={{type: 'info'}}>
+                The drawing for the opportunity to get a Limited Edition "Foiled Charizard" hasn't initiated yet.
+                Please come back later.
+            </Message>)
         }
     }
 

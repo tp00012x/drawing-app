@@ -13,8 +13,7 @@ class UserInput extends Component {
         isSixCharactersLong: false,
         enableSubmit: false,
         participantNotFound: false,
-        participantAlreadyExists: false,
-        didSubmitParticipant: false
+        participantAlreadyExists: false
     };
 
     // Sends GET request to get a participant using code entered
@@ -36,7 +35,6 @@ class UserInput extends Component {
             const data = {code: this.state.code, is_winner: false};
 
             await axios.post('/api/add_participant', data);
-            this.setState({didSubmitParticipant: true});
         } catch (event) {
             console.log(`Axios POST request failed: ${event}`);
         }
@@ -64,14 +62,14 @@ class UserInput extends Component {
         await this.getParticipant();
 
         const {code, selectedOption, participant} = this.state;
-        const {setParticipant, didSubmitParticipant} = this.props;
+        const {setParticipant, setDidSubmitParticipant} = this.props;
 
         if (selectedOption === "participate") {
             if (participant) {
                 participant.code === code && this.setState({participantAlreadyExists: true})
             } else {
                 await this.addParticipant();
-                didSubmitParticipant();
+                setDidSubmitParticipant();
             }
         } else if (selectedOption === "check_status") {
             if (participant) {
