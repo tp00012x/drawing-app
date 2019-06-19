@@ -7,24 +7,24 @@ import Message from '../Message'
 
 class UserForm extends Component {
     state = {
-        codeSubmitted: false,
-        user: null
+        didSubmitParticipant: false,
+        participant: null
     };
 
-    setUser = (user) => {
-        this.setState({user: user});
+    setParticipant = (participant) => {
+        this.setState({participant});
     };
 
     renderContent() {
-        const {codeSubmitted, user} = this.state;
+        const {didSubmitParticipant, participant} = this.state;
 
-        if (codeSubmitted) {
+        if (didSubmitParticipant) {
             return (
                 <Message styles={{type: 'info'}}>
                     You have entered the drawing to win a Limited Edition Pokemon Card. Good luck!
                 </Message>)
-        } else if (user) {
-            return user.is_winner ? (
+        } else if (participant) {
+            return participant.is_winner ? (
                 <Message styles={{type: 'positive'}}>
                     Congratulations, You've won the Limited Edition "Foiled Charizard"
                     <img className="ui medium rounded image p-2" src={pokemonCardPic} alt="pokemon"/>
@@ -47,9 +47,9 @@ class UserForm extends Component {
                         </ul>
                     </Message>
                     <UserInput
-                        codeSubmitted={() => this.setState({codeSubmitted: true})}
-                        setUser={this.setUser}
-                        user={user}
+                        didSubmitParticipant={() => this.setState({didSubmitParticipant: true})}
+                        setParticipant={this.setParticipant}
+                        participant={participant}
                     />
                 </Fragment>)
         }

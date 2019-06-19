@@ -6,21 +6,27 @@ const port = 5000;
 
 const jsonParser = bodyParser.json();
 const participants = [
-    {id: '111111', is_winner: false},
-    {id: '222222', is_winner: false},
-    {id: '333333', is_winner: false},
-    {id: '444444', is_winner: false},
-    {id: '555555', is_winner: false},
+    {code: '111111', is_winner: true},
+    {code: '222222', is_winner: false},
+    {code: '333333', is_winner: false},
+    {code: '444444', is_winner: false},
+    {code: '555555', is_winner: false},
 ];
 
-const winnersIds = [];
+const winners = [];
 
 const setRandomWinners = (participants, numberOfWinners) => {
-    while (winnersIds.length < numberOfWinners) {
+    while (winners.length < numberOfWinners) {
         const randomParticipant = participants[Math.floor(Math.random() * participants.length)];
 
-        if (!winnersIds.includes(randomParticipant.id)) {
-            winnersIds.push(randomParticipant.id);
+        if (!winners.includes(randomParticipant.code)) {
+            winners.push(randomParticipant.code);
+        }
+    }
+
+    for (let participant of participants) {
+        if (winners.includes(participant.code)) {
+            participant.is_winner = true;
         }
     }
 };
@@ -29,33 +35,20 @@ app.get('/api/participants', (req, res) => {
     res.json(participants);
 });
 
-app.get('/api/winners', (req, res) => {
-    res.json(winnersIds);
+app.get('/api/participant/:code', (req, res) => {
+    const participant = participants.find((participant) => participant.code === req.params.code);
+
+    res.json(participant);
 });
 
-app.get('/api/participant/:id', (req, res) => {
-    res.json(participants.find((user) => user.id === req.params.id));
-});
-
-app.put('/api/reset_winners', jsonParser, (req, res) => {
-    const {resetWinners} = req.body;
-
-    if (resetWinners) {
-        while (winnersIds.length) {
-            winnersIds.pop();
-        }
-    }
-});
-
-app.patch('/api/generate_random_winners', jsonParser, (req) => {
+app.patch('/api/set_random_winners', jsonParser, (req) => {
     const {randomize, numberOfWinners} = req.body;
 
     randomize && setRandomWinners(participants, numberOfWinners);
-    console.log(winnersIds);
 });
 
-app.post('/api/add_user', jsonParser, (req) => {
-    req.method === 'POST' && participants.push(req.body);
+app.post('/api/add_participant', jsonParser, (req, res) => {
+    participants.push(req.body);
 });
 
 app.listen(port, () => `Server running on port ${port}`);

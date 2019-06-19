@@ -1,52 +1,37 @@
 import React, { Component } from 'react'
-import Message from '../Message'
+import ValidationMessages from './ValidationMessages'
+import axios from 'axios';
+
 
 class UserInput extends Component {
     state = {
         code: null,
+        participant: null,
+        selectedOption: 'participate',
         isAlphanumeric: false,
         inputIsNotBlank: false,
         isSixCharactersLong: false,
-        selectedOption: 'participate',
         enableSubmit: false,
-        userNotFound: false,
-        userAlreadyExists: false
+        participantNotFound: false,
+        participantAlreadyExists: false,
+        didSubmitParticipant: false
     };
 
-    handleSubmit = async (event) => {
-        event.preventDefault();
-        const selectedOption = this.state.selectedOption;
-        const user = await this.getUser();
-        const {setUser} = this.props;
+    async getParticipant() {
+        const {code} = this.state;
+        const response = await axios.get(`/api/participant/${code}`);
+        const participant = response.data;
 
-        if (selectedOption === "participate") {
-            user ? this.setState({userAlreadyExists: true}) : this.addUser();
-        } else if (selectedOption === "check_status") {
-            user === undefined ? this.setState({userNotFound: true}) : setUser(user);
-        }
-    };
-
-    addUser() {
-        const data = {id: this.state.code, is_winner: true};
-        const {codeSubmitted} = this.props;
-
-        fetch('/api/add_user', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-            .then(res => res.json());
-
-        codeSubmitted();
+        participant ? this.setState({participant}) : this.setState({participant: null});
     }
 
-    async getUser() {
-        return fetch(`/api/user/${this.state.code}`)
-            .then(res => res.json())
-            .catch(() => undefined); //Return undefined for farther validation if we can't find the user
-    };
+    async addParticipant() {
+        const data = {code: this.state.code, is_winner: false};
+
+        await axios.post('/api/add_participant', data);
+
+        this.setState({didSubmitParticipant: true});
+    }
 
     handleOnInputChange = (event) => {
         const {value} = event.target;
@@ -54,7 +39,7 @@ class UserInput extends Component {
         const isSixCharactersLong = value && value.length === 6;
         const inputIsNotBlank = Boolean(value);
 
-        this.setState({enableSubmit: false, userAlreadyExists: false, userNotFound: false});
+        this.setState({enableSubmit: false, participantAlreadyExists: false, participantNotFound: false});
         this.setState({isAlphanumeric, isSixCharactersLong, inputIsNotBlank});
 
         if (inputIsNotBlank && isAlphanumeric && isSixCharactersLong) {
@@ -62,23 +47,29 @@ class UserInput extends Component {
         }
     };
 
-    renderValidationMessage() {
-        const {isAlphanumeric, inputIsNotBlank, userNotFound, userAlreadyExists} = this.state;
+    handleSubmit = async (event) => {
+        event.preventDefault();
+        await this.getParticipant();
 
-        if (!isAlphanumeric && inputIsNotBlank) {
-            return (
-                <Message styles={{type: 'negative'}}> You must enter only Alphanumeric characters.</Message>
-            )
-        } else if (userNotFound) {
-            return (
-                <Message styles={{type: 'negative'}}>
-                    This user can't be found! Please check that the entered code is correct.
-                </Message>)
-        } else if (userAlreadyExists) {
-            return (
-                <Message styles={{type: 'negative'}}>User already exists. Please try different code!</Message>)
+        const {code, selectedOption, participant} = this.state;
+        const {setParticipant, didSubmitParticipant} = this.props;
+
+        if (selectedOption === "participate") {
+            if (participant) {
+                participant.code === code && this.setState({participantAlreadyExists: true})
+            } else {
+                await this.addParticipant();
+                didSubmitParticipant();
+            }
+        } else if (selectedOption === "check_status") {
+            if (participant) {
+                participant.code === code && setParticipant(participant)
+            } else {
+                this.setState({participantNotFound: true})
+            }
         }
-    }
+    };
+
 
     render() {
         const {enableSubmit} = this.state;
@@ -96,7 +87,7 @@ class UserInput extends Component {
                     </select>
                     <button className={`ui ${!enableSubmit && 'disabled'} black button`}>Submit</button>
                 </div>
-                {this.renderValidationMessage()}
+                <ValidationMessages state={this.state}/>
             </form>
         );
     }
