@@ -11,13 +11,17 @@ const participants = [
     {code: '333333', is_winner: false},
     {code: '444444', is_winner: false},
     {code: '555555', is_winner: false},
+    {code: '666666', is_winner: false},
+    {code: '777777', is_winner: false},
+    {code: '888888', is_winner: false},
+    {code: '999999', is_winner: false},
 ];
 
 // Keep tracks of winner codes to aid with the selections of random winners.
 const winners = [];
 
 // Selects random participants and set their is_winner key to true.
-const setRandomWinners = (participants, numberOfWinners) => {
+const setRandomWinners = (numberOfWinners) => {
     while (winners.length < numberOfWinners) {
         const randomParticipant = participants[Math.floor(Math.random() * participants.length)];
 
@@ -33,6 +37,19 @@ const setRandomWinners = (participants, numberOfWinners) => {
     }
 };
 
+// Resets participants to have their respective key, is_winner, be false, and empties out winners array.
+const resetParticipants = () => {
+    for (let winner of winners) {
+        participants.forEach((participant) => {
+            if (winner === participant.code) {
+                participant.is_winner = false
+            }
+        })
+    }
+
+    winners.length = 0;
+};
+
 app.get('/api/participants', (req, res) => {
     res.json(participants);
 });
@@ -46,13 +63,21 @@ app.get('/api/participant/:code', (req, res) => {
 });
 
 app.patch('/api/set_random_winners', jsonParser, (req, res) => {
-    // randomize: A boolean that is passed to this PATCH request.
+    // randomize: A boolean that is passed to this PATCH request.that confirms selection fo random winners
     // numberOfWinners: The amount of winners we want to set. Requirements specify that this value must be 5.
     const {randomize, numberOfWinners} = req.body;
 
     // Set random participants to have a is_winner key of true
-    randomize && setRandomWinners(participants, numberOfWinners);
+    randomize && setRandomWinners(numberOfWinners);
     res.json('Generated random winners successfully.');
+});
+
+app.patch('/api/reset_participants', jsonParser, (req, res) => {
+    // reset: A boolean that is passed to this PATCH request to confirm the reset of participants.
+    const {reset} = req.body;
+
+    reset && resetParticipants();
+    res.json('Reset winners successfully.');
 });
 
 app.post('/api/add_participant', jsonParser, (req, res) => {

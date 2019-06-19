@@ -1,17 +1,31 @@
 import '../../scss/components/AdminForm.scss';
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import UserList from "./UserList";
 import GoHomeButton from '../GoHomeButton';
 import SelectRandomWinners from './SelectRandomWinners';
 import axios from 'axios';
 import Message from "../Message";
-
+import ResetWinners from "./ResetWinners"
 
 class AdminForm extends Component {
     state = {
         participants: null,
         generatedWinners: false,
         enoughParticipants: false,
+        didResetWinners: true,
+        winners: null
+    };
+
+    // Sends PATCH request to set reset winners from our participants array in the server.js file
+    resetWinners = async () => {
+        try {
+            const data = {reset: true};
+
+            await axios.patch('/api/reset_participants', data);
+            this.setState({didResetWinners: true});
+        } catch (event) {
+            console.log(`Axios PATCH reset winners request failed: ${event}`);
+        }
     };
 
     // Sends PATCH request to set random winners from our participants array in the server.js file
@@ -20,9 +34,9 @@ class AdminForm extends Component {
             const data = {randomize: true, numberOfWinners: 5};
 
             await axios.patch('/api/set_random_winners', data);
-            this.setState({generatedWinners: true});
+            this.setState({generatedWinners: true, didResetWinners: false});
         } catch (event) {
-            console.log(`Axios PATCH request failed: ${event}`);
+            console.log(`Axios PATCH set random winners request failed: ${event}`);
         }
     };
 
@@ -56,19 +70,27 @@ class AdminForm extends Component {
         }
     };
 
+
     render() {
         const {handleReset} = this.props;
-        const {generatedWinners, enoughParticipants, winners, participants} = this.state;
+        const {generatedWinners, enoughParticipants, participants, didResetWinners, winners} = this.state;
 
+        //TODO fix so the message doesn't appear when trying to show the user list
         return (
             <div className="admin-form">
                 <div className="admin-form--column__left center-content">
                     <div className="d-flex flex-column">
                         <div className="p-2">
                             {
-                                (generatedWinners && enoughParticipants) ?
-                                    <UserList winners={winners}/> :
-                                    <SelectRandomWinners handleOnClick={this.handleOnClick}/>
+                                (generatedWinners && enoughParticipants && !didResetWinners) && (
+                                    <Fragment>
+                                        <ResetWinners resetWinners={this.resetWinners}/>
+                                        <UserList winners={winners}/>
+                                    </Fragment>
+                                )
+                            }
+                            {
+                                didResetWinners && <SelectRandomWinners handleOnClick={this.handleOnClick}/>
                             }
                             {
                                 (!enoughParticipants && participants) && (
