@@ -3,29 +3,62 @@ import React, { Component } from 'react'
 import UserList from "./UserList";
 import GoHomeButton from '../GoHomeButton';
 import SelectRandomWinners from './SelectRandomWinners';
+import axios from 'axios';
+import Message from "../Message";
+
 
 class AdminForm extends Component {
     state = {
+        participants: null,
         generatedWinners: false,
+        enoughParticipants: false,
     };
 
-    setRandomWinners = () => {
-        // Send PATCH request to simulate the modification of existing participants and making their is_winner key, true
-        fetch('/api/set_random_winners', {
-            method: 'PATCH',
-            headers: {
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify({randomize: true, numberOfWinners: 5}),
-        })
-            .then(res => res.json());
+    // Sends PATCH request to set random winners from our participants array in the server.js file
+    async setRandomWinners() {
+        try {
+            const data = {randomize: true, numberOfWinners: 5};
 
-        this.setState({generatedWinners: true});
+            await axios.patch('/api/set_random_winners', data);
+            this.setState({generatedWinners: true});
+        } catch (event) {
+            console.log(`Axios PATCH request failed: ${event}`);
+        }
+    };
+
+    // Sends GET request to get all participants at any state
+    async getParticipants() {
+        try {
+            const response = await axios.get('/api/participants');
+            const participants = response.data;
+
+            this.setState({participants});
+        } catch (event) {
+            console.log(`Axios GET participants request failed: ${event}`);
+        }
+    }
+
+    // Given an array of participants, it returns an array of participants whose keys, is_winner, are true
+    static getWinners(participants) {
+        return participants.filter(participant => participant.is_winner);
+    }
+
+    handleOnClick = async () => {
+        await this.getParticipants();
+
+        if (this.state.participants.length >= 5) {
+            await this.setRandomWinners();
+            await this.getParticipants();
+
+            const winners = AdminForm.getWinners(this.state.participants);
+
+            this.setState({enoughParticipants: true, winners})
+        }
     };
 
     render() {
         const {handleReset} = this.props;
-        const {generatedWinners} = this.state;
+        const {generatedWinners, enoughParticipants, winners, participants} = this.state;
 
         return (
             <div className="admin-form">
@@ -33,9 +66,16 @@ class AdminForm extends Component {
                     <div className="d-flex flex-column">
                         <div className="p-2">
                             {
-                                generatedWinners ?
-                                    <UserList/> :
-                                    <SelectRandomWinners setRandomWinners={this.setRandomWinners}/>
+                                (generatedWinners && enoughParticipants) ?
+                                    <UserList winners={winners}/> :
+                                    <SelectRandomWinners handleOnClick={this.handleOnClick}/>
+                            }
+                            {
+                                (!enoughParticipants && participants) && (
+                                    <Message styles={{type: 'negative'}}>
+                                        There are not enough participants to select Random Winners!
+                                    </Message>
+                                )
                             }
                         </div>
                         <div className="p-2">

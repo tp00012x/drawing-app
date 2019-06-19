@@ -17,22 +17,33 @@ class UserInput extends Component {
         didSubmitParticipant: false
     };
 
+    // Sends GET request to get a participant using code entered
     async getParticipant() {
-        const {code} = this.state;
-        const response = await axios.get(`/api/participant/${code}`);
-        const participant = response.data;
+        try {
+            const {code} = this.state;
+            const response = await axios.get(`/api/participant/${code}`);
+            const participant = response.data;
 
-        participant ? this.setState({participant}) : this.setState({participant: null});
+            participant ? this.setState({participant}) : this.setState({participant: null});
+        } catch (event) {
+            console.log(`Axios GET participant request failed: ${event}`);
+        }
     }
 
+    // Sends POST request to add a participant to the participant array inside server.js
     async addParticipant() {
-        const data = {code: this.state.code, is_winner: false};
+        try {
+            const data = {code: this.state.code, is_winner: false};
 
-        await axios.post('/api/add_participant', data);
+            await axios.post('/api/add_participant', data);
+            this.setState({didSubmitParticipant: true});
+        } catch (event) {
+            console.log(`Axios POST request failed: ${event}`);
+        }
 
-        this.setState({didSubmitParticipant: true});
     }
 
+    // Deals with the validation of input field on input change. Submit button is disabled until all validations pass.
     handleOnInputChange = (event) => {
         const {value} = event.target;
         const isAlphanumeric = /^[a-z0-9]+$/i.test(value);
@@ -47,6 +58,7 @@ class UserInput extends Component {
         }
     };
 
+    // Handles the Submit logic after input field has been validated depending on the selected Option
     handleSubmit = async (event) => {
         event.preventDefault();
         await this.getParticipant();
@@ -69,7 +81,6 @@ class UserInput extends Component {
             }
         }
     };
-
 
     render() {
         const {enableSubmit} = this.state;
