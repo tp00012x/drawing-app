@@ -1,5 +1,5 @@
 import '../../scss/components/AdminForm.scss';
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import UserList from "./UserList";
 import GoHomeButton from '../GoHomeButton';
 import SelectRandomWinners from './SelectRandomWinners';
@@ -90,14 +90,15 @@ class AdminForm extends Component {
                         <div className="p-2">
                             {
                                 (generatedWinners && enoughParticipants && !didResetWinners) && (
-                                    <Fragment>
-                                        <ResetWinners resetWinners={this.resetWinners}/>
-                                        <UserList winners={winners}/>
-                                    </Fragment>
+                                    <ResetWinners resetWinners={this.resetWinners}/>
                                 )
                             }
                             {
                                 didResetWinners && <SelectRandomWinners handleOnClick={this.handleOnClick}/>
+                            }
+                            {
+                                (winners && !didResetWinners) && <UserList winners={winners}/>
+
                             }
                             {
                                 (participants && loading) && <Spinner/>
