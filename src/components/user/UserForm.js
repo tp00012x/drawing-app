@@ -55,12 +55,12 @@ class UserForm extends Component {
                         setDidSubmitParticipant={this.setDidSubmitParticipant}
                         setParticipant={this.setParticipant}
                         participant={participant}
+                        generatedWinners={generatedWinners}
                     />
                 </Fragment>)
         } else if (!generatedWinners) {
             return (<Message styles={{type: 'info'}}>
-                The drawing for the opportunity to get a Limited Edition "Foiled Charizard" hasn't initiated yet.
-                Please come back later.
+                The winner has not been selected yet. Please check back later!
             </Message>)
         }
     }

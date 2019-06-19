@@ -12,8 +12,8 @@ class App extends React.Component {
         generatedWinners: false
     };
 
-    setGeneratedWinners = () => {
-        this.setState({generatedWinners: true})
+    setGeneratedWinners = (bool) => {
+        this.setState({generatedWinners: bool})
     };
 
     handleReset = (params) => {

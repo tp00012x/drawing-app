@@ -19,9 +19,11 @@ class AdminForm extends Component {
     resetWinners = async () => {
         try {
             const data = {reset: true};
+            const {setGeneratedWinners} = this.props;
 
             await axios.patch('/api/reset_participants', data);
             this.setState({didResetWinners: true});
+            setGeneratedWinners(false);
         } catch (event) {
             console.log(`Axios PATCH reset winners request failed: ${event}`);
         }
@@ -34,7 +36,7 @@ class AdminForm extends Component {
             const {setGeneratedWinners} = this.props;
 
             await axios.patch('/api/set_random_winners', data);
-            setGeneratedWinners();
+            setGeneratedWinners(true);
             this.setState({ didResetWinners: false});
         } catch (event) {
             console.log(`Axios PATCH set random winners request failed: ${event}`);

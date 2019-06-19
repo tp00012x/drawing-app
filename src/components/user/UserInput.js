@@ -7,7 +7,7 @@ class UserInput extends Component {
     state = {
         code: null,
         participant: null,
-        selectedOption: 'participate',
+        selectedOption: this.props.generatedWinners ? 'check_status': 'participate',
         isAlphanumeric: false,
         inputIsNotBlank: false,
         isSixCharactersLong: false,
@@ -82,6 +82,7 @@ class UserInput extends Component {
 
     render() {
         const {enableSubmit} = this.state;
+        const {generatedWinners} = this.props;
 
         return (
             <form method="POST" onSubmit={this.handleSubmit}>
@@ -91,7 +92,7 @@ class UserInput extends Component {
                         className="ui compact selection dropdown"
                         onChange={event => this.setState({selectedOption: event.target.value})}
                     >
-                        <option value="participate">Participate!</option>
+                        {!generatedWinners && <option value="participate">Participate!</option>}
                         <option value="check_status">Check status</option>
                     </select>
                     <button className={`ui ${!enableSubmit && 'disabled'} black button`}>Submit</button>
