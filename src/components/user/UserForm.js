@@ -8,11 +8,16 @@ import Message from '../Message'
 class UserForm extends Component {
     state = {
         didSubmitParticipant: false,
-        participant: null
+        participant: null,
+        adjacentWinner: null,
     };
 
     setParticipant = (participant) => {
         this.setState({participant});
+    };
+
+    setAdjacentWinner = (adjacentWinner) => {
+        this.setState({adjacentWinner});
     };
 
     setDidSubmitParticipant = () => {
@@ -20,7 +25,7 @@ class UserForm extends Component {
     } ;
 
     renderContent() {
-        const {didSubmitParticipant, participant} = this.state;
+        const {didSubmitParticipant, participant, adjacentWinner} = this.state;
         const {generatedWinners} = this.props;
 
         if (didSubmitParticipant) {
@@ -36,7 +41,8 @@ class UserForm extends Component {
                 </Message>
             ) : (
                 <Message styles={{type: 'negative'}}>
-                    We apologize, but you didn't win. Please try again, and good luck next time!
+                    We apologize, but you didn't win. The nearest winner had a code of {adjacentWinner.code}. Please try
+                    again, and good luck next time!
                 </Message>
             )
         } else if (!participant) {
@@ -56,6 +62,7 @@ class UserForm extends Component {
                         setParticipant={this.setParticipant}
                         participant={participant}
                         generatedWinners={generatedWinners}
+                        setAdjacentWinner={this.setAdjacentWinner}
                     />
                 </Fragment>)
         } else if (!generatedWinners) {

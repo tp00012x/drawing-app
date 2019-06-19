@@ -7,7 +7,7 @@ class UserInput extends Component {
     state = {
         code: null,
         participant: null,
-        selectedOption: this.props.generatedWinners ? 'check_status': 'participate',
+        selectedOption: this.props.generatedWinners ? 'check_status' : 'participate',
         isAlphanumeric: false,
         inputIsNotBlank: false,
         isSixCharactersLong: false,
@@ -20,10 +20,16 @@ class UserInput extends Component {
     async getParticipant() {
         try {
             const {code} = this.state;
+            const {setAdjacentWinner} = this.props;
             const response = await axios.get(`/api/participant/${code}`);
-            const participant = response.data;
+            const {participant, adjacentWinner} = response.data;
 
-            participant ? this.setState({participant}) : this.setState({participant: null});
+            if (participant) {
+                this.setState({participant});
+                setAdjacentWinner(adjacentWinner);
+            } else {
+                this.setState({participant: null})
+            }
         } catch (event) {
             console.log(`Axios GET participant request failed: ${event}`);
         }

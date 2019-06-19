@@ -8,13 +8,21 @@ const jsonParser = bodyParser.json();
 const participants = [
     {code: '111111', is_winner: false},
     {code: '222222', is_winner: false},
-    {code: '333333', is_winner: false},
     {code: '444444', is_winner: false},
+    {code: '777777', is_winner: false},
     {code: '555555', is_winner: false},
     {code: '666666', is_winner: false},
-    {code: '777777', is_winner: false},
+    {code: '333333', is_winner: false},
     {code: '888888', is_winner: false},
-    {code: '999999', is_winner: false},
+    {code: 'aaaaaa', is_winner: false},
+    {code: 'ssssss', is_winner: false},
+    {code: 'dddddd', is_winner: false},
+    {code: 'ffffff', is_winner: false},
+    {code: 'rrrrrr', is_winner: false},
+    {code: 'tttttt', is_winner: false},
+    {code: 'gggggg', is_winner: false},
+    {code: 'bbbbbb', is_winner: false},
+
 ];
 
 // Keep tracks of winner codes to aid with the selections of random winners.
@@ -39,15 +47,37 @@ const setRandomWinners = (numberOfWinners) => {
 
 // Resets participants to have their respective key, is_winner, be false, and empties out winners array.
 const resetParticipants = () => {
-    for (let winner of winners) {
-        participants.forEach((participant) => {
-            if (winner === participant.code) {
-                participant.is_winner = false
-            }
-        })
-    }
+    participants.forEach((participant) => {
+        participant.is_winner = false
+    });
 
     winners.length = 0;
+};
+
+// Gets the nearest winner to the given participant.
+const getAdjacentWinner = (participant) => {
+    let index = participants.indexOf(participant);
+    let winner;
+    let awayDown = 0;
+    let awayUp = 0;
+
+    for (let x = index - 1; x >= 0; x--) {
+        let currentParticipant = participants[x];
+        awayDown += 1;
+        if (currentParticipant.is_winner) {
+            winner = currentParticipant;
+            break
+        }
+    }
+    for (let x = index + 1; x < participants.length; x++) {
+        let currentParticipant = participants[x];
+        awayUp += 1;
+        if (currentParticipant.is_winner && awayUp <= awayDown) {
+            winner = currentParticipant;
+            break
+        }
+    }
+    return winner
 };
 
 app.get('/api/participants', (req, res) => {
@@ -58,8 +88,9 @@ app.get('/api/participant/:code', (req, res) => {
     // Validations stop non-unique code values from being added to the participants array during the POST request.
     // Thus, we return the first code that is found inside the participants array.
     const participant = participants.find((participant) => participant.code === req.params.code);
+    const adjacentWinner = getAdjacentWinner(participant);
 
-    res.json(participant);
+    res.json({participant, adjacentWinner});
 });
 
 app.patch('/api/set_random_winners', jsonParser, (req, res) => {
