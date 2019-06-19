@@ -25,23 +25,23 @@ const participants = [
 
 ];
 
-// Keep tracks of winner codes to aid with the selections of random winners.
-const winners = [];
+// Found a nice way to shuffle in this SOF post https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
+const shuffle = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array
+};
 
 // Selects random participants and set their is_winner key to true.
 const setRandomWinners = (numberOfWinners) => {
-    while (winners.length < numberOfWinners) {
-        const randomParticipant = participants[Math.floor(Math.random() * participants.length)];
+    const arr = [...Array(participants.length).keys()];
+    const shuffledArr = shuffle(arr);
+    const newArr = shuffledArr.slice(0, numberOfWinners);
 
-        if (!winners.includes(randomParticipant.code)) {
-            winners.push(randomParticipant.code);
-        }
-    }
-
-    for (let participant of participants) {
-        if (winners.includes(participant.code)) {
-            participant.is_winner = true;
-        }
+    for (let el of newArr) {
+        participants[el].is_winner = true;
     }
 };
 
@@ -50,8 +50,6 @@ const resetParticipants = () => {
     participants.forEach((participant) => {
         participant.is_winner = false
     });
-
-    winners.length = 0;
 };
 
 // Gets the nearest winner to the given participant.
