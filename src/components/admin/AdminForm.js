@@ -1,18 +1,20 @@
 import '../../scss/components/AdminForm.scss';
-import React, { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react';
 import UserList from "./UserList";
 import GoHomeButton from '../GoHomeButton';
 import SelectRandomWinners from './SelectRandomWinners';
 import axios from 'axios';
 import Message from "../Message";
-import ResetWinners from "./ResetWinners"
+import ResetWinners from "./ResetWinners";
+import Spinner from "../Spinner";
 
 class AdminForm extends Component {
     state = {
         participants: null,
         enoughParticipants: false,
         didResetWinners: true,
-        winners: null
+        winners: null,
+        loading: false
     };
 
     // Sends PATCH request to set reset winners from our participants array in the server.js file
@@ -37,7 +39,7 @@ class AdminForm extends Component {
 
             await axios.patch('/api/set_random_winners', data);
             setGeneratedWinners(true);
-            this.setState({ didResetWinners: false});
+            this.setState({didResetWinners: false});
         } catch (event) {
             console.log(`Axios PATCH set random winners request failed: ${event}`);
         }
@@ -62,6 +64,7 @@ class AdminForm extends Component {
 
     handleOnClick = async () => {
         await this.getParticipants();
+        this.setState({loading: true});
 
         if (this.state.participants.length >= 5) {
             await this.setRandomWinners();
@@ -69,16 +72,17 @@ class AdminForm extends Component {
 
             const winners = AdminForm.getWinners(this.state.participants);
 
-            this.setState({enoughParticipants: true, winners})
+            this.setState({enoughParticipants: true, winners, loading: false})
+        } else {
+            this.setState({enoughParticipants: false, loading: false})
         }
     };
 
 
     render() {
         const {handleReset, generatedWinners} = this.props;
-        const {enoughParticipants, participants, didResetWinners, winners} = this.state;
+        const {enoughParticipants, participants, didResetWinners, winners, loading} = this.state;
 
-        //TODO fix so the message doesn't appear when trying to show the user list
         return (
             <div className="admin-form">
                 <div className="admin-form--column__left center-content">
@@ -96,7 +100,10 @@ class AdminForm extends Component {
                                 didResetWinners && <SelectRandomWinners handleOnClick={this.handleOnClick}/>
                             }
                             {
-                                (!enoughParticipants && participants) && (
+                                (participants && loading) && <Spinner/>
+                            }
+                            {
+                                (participants && !enoughParticipants && !loading) && (
                                     <Message styles={{type: 'negative'}}>
                                         There are not enough participants to select Random Winners!
                                     </Message>
