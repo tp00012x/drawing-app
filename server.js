@@ -5,25 +5,20 @@ const app = express();
 const port = 5000;
 
 const jsonParser = bodyParser.json();
-const participants = [
-    {code: '111111', is_winner: false},
-    {code: '222222', is_winner: false},
-    {code: '444444', is_winner: false},
-    {code: '777777', is_winner: false},
-    {code: '555555', is_winner: false},
-    {code: '666666', is_winner: false},
-    {code: '333333', is_winner: false},
-    {code: '888888', is_winner: false},
-    {code: 'aaaaaa', is_winner: false},
-    {code: 'ssssss', is_winner: false},
-    {code: 'dddddd', is_winner: false},
-    {code: 'ffffff', is_winner: false},
-    {code: 'rrrrrr', is_winner: false},
-    {code: 'tttttt', is_winner: false},
-    {code: 'gggggg', is_winner: false},
-    {code: 'bbbbbb', is_winner: false},
 
-];
+// Example of how data looks when a participant is added via a POST request.
+// const participants = [
+//     {code: '111111', is_winner: false},
+//     {code: '222222', is_winner: false},
+//     {code: '444444', is_winner: false},
+//     {code: '777777', is_winner: false},
+//     {code: '555555', is_winner: false},
+//     {code: '666666', is_winner: false},
+//     {code: '333333', is_winner: false},
+//     {code: '888888', is_winner: false},
+// ];
+
+const participants = [];
 
 // Found a nice way to shuffle in this SOF post https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
 const shuffle = (array) => {
@@ -52,7 +47,8 @@ const resetParticipants = () => {
     });
 };
 
-// Gets the nearest winner to the given participant.
+// Gets the nearest winner to the given participant. The nearest winner is measured by order of sign up.
+// Every time a participant enters the drawing, they will be pushed to the end of the array.
 const getAdjacentWinner = (participant) => {
     let index = participants.indexOf(participant);
     let winner;
