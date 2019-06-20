@@ -5,7 +5,7 @@ function ResetWinners(props) {
 
     return (
         <button
-            className="ui labeled icon button"
+            className="ui labeled icon button align-self-center mb-3"
             onClick={() => {
                 resetWinners()
             }}

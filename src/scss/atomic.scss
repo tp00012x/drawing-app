@@ -1,21 +1,22 @@
-.center-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+$background-color: #1b1c1d;
 
 .full-height {
   height: 100vh;
 }
 
-.as-c {
-  align-self: center;
+.margin-auto {
+  margin: auto;
 }
 
-.ta-c {
-  text-align: center;
+.font-1 {
+  font-size: 1rem !important;
 }
 
-.mb-2 {
-  margin-bottom: 2rem;
+//Flex
+.f-1 {
+  flex: 1;
+}
+
+.dark-background {
+  background-color: $background-color;
 }

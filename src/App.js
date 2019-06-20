@@ -1,5 +1,3 @@
-import './scss/atomic.scss';
-import './scss/form.scss';
 import React from 'react';
 import HomeButtons from './components/HomeButtons';
 import UserForm from './components/user/UserForm';

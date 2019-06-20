@@ -11,10 +11,10 @@ function UserList(props) {
                     <div className="column" key={code}>
                         <div className="ui fluid card">
                             <div className="image">
-                                <img src={faker.image.avatar()} alt="user avatar"/>
+                                <img src={faker.image.avatar()} alt="avatar"/>
                             </div>
                             <div className="content">
-                                <a className="header" href={`/api/participant/${code}`}>
+                                <a className="header font-1" href="/">
                                     User: {code}
                                 </a>
                             </div>

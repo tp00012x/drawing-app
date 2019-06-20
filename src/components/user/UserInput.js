@@ -92,7 +92,7 @@ class UserInput extends Component {
 
         return (
             <form method="POST" onSubmit={this.handleSubmit}>
-                <div className="ui action input">
+                <div className="ui action input d-flex align-items-center">
                     <input type="text" placeholder="Enter code" name="code" onChange={this.handleOnInputChange}/>
                     <select
                         className="ui compact selection dropdown"

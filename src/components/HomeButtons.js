@@ -8,7 +8,7 @@ function HomeButtons(props) {
 
     return (
         <div className="buttons">
-            <div className="ui inverted segment center-content full-height">
+            <div className="ui inverted segment d-flex justify-content-center align-items-center full-height">
                 <div className="ui large buttons">
                     <HomeButton styles={{color: 'black'}} setAdminOrUser={setAdminOrUser} params={{isAdmin: true}}>
                         Admin

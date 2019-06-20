@@ -1,4 +1,3 @@
-import '../../scss/components/AdminForm.scss';
 import React, { Component } from 'react';
 import UserList from "./UserList";
 import GoHomeButton from '../GoHomeButton';
@@ -84,10 +83,10 @@ class AdminForm extends Component {
         const {enoughParticipants, participants, didResetWinners, winners, loading} = this.state;
 
         return (
-            <div className="admin-form">
-                <div className="admin-form--column__left center-content">
-                    <div className="d-flex flex-column">
-                        <div className="p-2">
+            <div className="d-flex full-height">
+                <div className="f-1">
+                    <div className="d-flex flex-column full-height justify-content-center align-items-center">
+                        <div className="d-flex flex-column p-2">
                             {
                                 (generatedWinners && enoughParticipants && !didResetWinners) && (
                                     <ResetWinners resetWinners={this.resetWinners}/>
@@ -116,7 +115,7 @@ class AdminForm extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="admin-form--column__right"/>
+                <div className="f-1 dark-background"/>
             </div>
         )
     }

@@ -6,16 +6,13 @@ const port = 5000;
 
 const jsonParser = bodyParser.json();
 
-// Example of how data looks when a participant is added via a POST request.
+// Example of how data is stored when a participant is added via a POST request.
 // const participants = [
 //     {code: '111111', is_winner: false},
 //     {code: '222222', is_winner: false},
 //     {code: '444444', is_winner: false},
 //     {code: '777777', is_winner: false},
 //     {code: '555555', is_winner: false},
-//     {code: '666666', is_winner: false},
-//     {code: '333333', is_winner: false},
-//     {code: '888888', is_winner: false},
 // ];
 
 const participants = [];

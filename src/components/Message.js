@@ -5,7 +5,7 @@ function Message(props) {
 
     return (
         <div className={`ui ${styles.type} center message`}>
-            <div className="header">
+            <div className="header text-center">
                 {children}
             </div>
         </div>
