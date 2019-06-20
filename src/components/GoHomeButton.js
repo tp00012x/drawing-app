@@ -1,13 +1,13 @@
 import React from 'react'
 
 function GoHomeButton(props) {
-    const {home} = props;
+    const {setAdminOrUser} = props;
 
     return (
         <button
             className="ui labeled icon button"
             onClick={() => {
-                home({is_admin: false, is_user: false})
+                setAdminOrUser({isAdmin: false, isUser: false})
             }}
         >
             <i className="home icon"/>

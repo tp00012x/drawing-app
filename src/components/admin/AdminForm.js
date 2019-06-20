@@ -80,7 +80,7 @@ class AdminForm extends Component {
 
 
     render() {
-        const {handleReset, generatedWinners} = this.props;
+        const {setAdminOrUser, generatedWinners} = this.props;
         const {enoughParticipants, participants, didResetWinners, winners, loading} = this.state;
 
         return (
@@ -112,7 +112,7 @@ class AdminForm extends Component {
                             }
                         </div>
                         <div className="p-2">
-                            <GoHomeButton home={handleReset}/>
+                            <GoHomeButton setAdminOrUser={setAdminOrUser}/>
                         </div>
                     </div>
                 </div>

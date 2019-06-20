@@ -7,8 +7,8 @@ import AdminForm from './components/admin/AdminForm'
 
 class App extends React.Component {
     state = {
-        is_admin: false,
-        is_user: false,
+        isAdmin: false,
+        isUser: false,
         generatedWinners: false
     };
 
@@ -16,7 +16,7 @@ class App extends React.Component {
         this.setState({generatedWinners: bool})
     };
 
-    handleReset = (params) => {
+    setAdminOrUser = (params) => {
         this.setState(params);
     };
 
@@ -25,15 +25,15 @@ class App extends React.Component {
 
         return (
             <div className="App">
-                {!this.state.is_user && !this.state.is_admin && <HomeButtons handleReset={this.handleReset}/>}
-                {this.state.is_admin && (
+                {!this.state.isUser && !this.state.isAdmin && <HomeButtons setAdminOrUser={this.setAdminOrUser}/>}
+                {this.state.isAdmin && (
                     <AdminForm
-                        handleReset={this.handleReset}
+                        setAdminOrUser={this.setAdminOrUser}
                         setGeneratedWinners={this.setGeneratedWinners}
                         generatedWinners={{generatedWinners}}
                     />
                 )}
-                {this.state.is_user && <UserForm handleReset={this.handleReset} generatedWinners={generatedWinners}/>}
+                {this.state.isUser && <UserForm setAdminOrUser={this.setAdminOrUser} generatedWinners={generatedWinners}/>}
             </div>
         );
     }

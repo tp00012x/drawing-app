@@ -1,13 +1,13 @@
 import React from 'react'
 
 function HomeButton(props) {
-    const {styles, handleReset, params, children} = props;
+    const {styles, setAdminOrUser, params, children} = props;
 
     return (
         <button
             className={`ui ${styles.color} inverted button`}
             onClick={() => {
-                handleReset(params)
+                setAdminOrUser(params)
             }}
         >
             {children}

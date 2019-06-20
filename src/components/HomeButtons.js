@@ -4,17 +4,17 @@ import HomeButton from './HomeButton'
 
 
 function HomeButtons(props) {
-    const {handleReset} = props;
+    const {setAdminOrUser} = props;
 
     return (
         <div className="buttons">
             <div className="ui inverted segment center-content full-height">
                 <div className="ui large buttons">
-                    <HomeButton styles={{color: 'black'}} handleReset={handleReset} params={{is_admin: true}}>
+                    <HomeButton styles={{color: 'black'}} setAdminOrUser={setAdminOrUser} params={{isAdmin: true}}>
                         Admin
                     </HomeButton>
                     <div className="or buttons__or"/>
-                    <HomeButton styles={{color: 'red'}} handleReset={handleReset} params={{is_user: true}}>
+                    <HomeButton styles={{color: 'red'}} setAdminOrUser={setAdminOrUser} params={{isUser: true}}>
                         User
                     </HomeButton>
                 </div>

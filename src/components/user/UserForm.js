@@ -73,7 +73,7 @@ class UserForm extends Component {
     }
 
     render() {
-        const {handleReset} = this.props;
+        const {setAdminOrUser} = this.props;
 
         return (
             <div className="user-form">
@@ -84,7 +84,7 @@ class UserForm extends Component {
                             {this.renderContent()}
                         </div>
                         <div className="p-2">
-                            <GoHomeButton home={handleReset}/>
+                            <GoHomeButton setAdminOrUser={setAdminOrUser}/>
                         </div>
                     </div>
                 </div>
