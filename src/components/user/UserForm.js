@@ -25,14 +25,14 @@ class UserForm extends Component {
 
     renderContent() {
         const {didSubmitParticipant, participant, adjacentWinner} = this.state;
-        const {generatedWinners} = this.props;
+        const {winners} = this.props;
 
         if (didSubmitParticipant) {
             return (
                 <Message styles={{type: 'info'}}>
                     You have entered the drawing to win a Limited Edition Pokemon Card. Good luck!
                 </Message>)
-        } else if (participant && generatedWinners) {
+        } else if (participant && winners) {
             return participant.is_winner ? (
                 <Message styles={{type: 'positive'}}>
                     Congratulations, You've won the Limited Edition "Foiled Charizard"
@@ -60,11 +60,11 @@ class UserForm extends Component {
                         setDidSubmitParticipant={this.setDidSubmitParticipant}
                         setParticipant={this.setParticipant}
                         participant={participant}
-                        generatedWinners={generatedWinners}
+                        winners={winners}
                         setAdjacentWinner={this.setAdjacentWinner}
                     />
                 </Fragment>)
-        } else if (!generatedWinners) {
+        } else if (!winners) {
             return (<Message styles={{type: 'info'}}>
                 The winner has not been selected yet. Please check back later!
             </Message>)

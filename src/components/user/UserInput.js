@@ -7,7 +7,7 @@ class UserInput extends Component {
     state = {
         code: null,
         participant: null,
-        selectedOption: this.props.generatedWinners ? 'check_status' : 'participate',
+        selectedOption: this.props.winners ? 'check_status' : 'participate',
         isAlphanumeric: false,
         inputIsNotBlank: false,
         isSixCharactersLong: false,
@@ -20,13 +20,13 @@ class UserInput extends Component {
     async getParticipant() {
         try {
             const {code} = this.state;
-            const {setAdjacentWinner} = this.props;
+            const {setAdjacentWinner, winners} = this.props;
             const response = await axios.get(`/api/participant/${code}`);
             const {participant, adjacentWinner} = response.data;
 
             if (participant) {
                 this.setState({participant});
-                setAdjacentWinner(adjacentWinner);
+                winners && setAdjacentWinner(adjacentWinner);
             } else {
                 this.setState({participant: null})
             }
@@ -88,7 +88,7 @@ class UserInput extends Component {
 
     render() {
         const {enableSubmit} = this.state;
-        const {generatedWinners} = this.props;
+        const {winners} = this.props;
 
         return (
             <form method="POST" onSubmit={this.handleSubmit}>
@@ -98,7 +98,7 @@ class UserInput extends Component {
                         className="ui compact selection dropdown"
                         onChange={event => this.setState({selectedOption: event.target.value})}
                     >
-                        {!generatedWinners && <option value="participate">Participate!</option>}
+                        {!winners && <option value="participate">Participate!</option>}
                         <option value="check_status">Check status</option>
                     </select>
                     <button className={`ui ${!enableSubmit && 'disabled'} black button`}>Submit</button>

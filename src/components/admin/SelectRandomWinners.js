@@ -2,11 +2,11 @@ import React from 'react'
 
 class SelectRandomWinners extends React.Component {
     render() {
-        const {handleOnClick} = this.props;
+        const {handleOnClick, enoughParticipants} = this.props;
 
         return (
             <button
-                className="ui black button"
+                className={`ui black button ${!enoughParticipants && 'disabled'}`}
                 onClick={() => {
                     handleOnClick();
                 }}

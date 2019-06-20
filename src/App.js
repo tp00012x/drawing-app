@@ -7,11 +7,11 @@ class App extends React.Component {
     state = {
         isAdmin: false,
         isUser: false,
-        generatedWinners: false
+        winners: null
     };
 
-    setGeneratedWinners = (bool) => {
-        this.setState({generatedWinners: bool})
+    setWinners = (winners) => {
+        this.setState({winners})
     };
 
     setAdminOrUser = (params) => {
@@ -19,7 +19,7 @@ class App extends React.Component {
     };
 
     render() {
-        const {generatedWinners} = this.state;
+        const {winners} = this.state;
 
         return (
             <div className="App">
@@ -27,11 +27,11 @@ class App extends React.Component {
                 {this.state.isAdmin && (
                     <AdminForm
                         setAdminOrUser={this.setAdminOrUser}
-                        setGeneratedWinners={this.setGeneratedWinners}
-                        generatedWinners={{generatedWinners}}
+                        setWinners={this.setWinners}
+                        winners={winners}
                     />
                 )}
-                {this.state.isUser && <UserForm setAdminOrUser={this.setAdminOrUser} generatedWinners={generatedWinners}/>}
+                {this.state.isUser && <UserForm setAdminOrUser={this.setAdminOrUser} winners={winners}/>}
             </div>
         );
     }

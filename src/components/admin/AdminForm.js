@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import UserList from "./UserList";
 import GoHomeButton from '../GoHomeButton';
 import SelectRandomWinners from './SelectRandomWinners';
@@ -9,10 +9,8 @@ import Spinner from "../Spinner";
 
 class AdminForm extends Component {
     state = {
-        participants: null,
+        participants: [],
         enoughParticipants: false,
-        didResetWinners: true,
-        winners: null,
         loading: false
     };
 
@@ -20,11 +18,10 @@ class AdminForm extends Component {
     resetWinners = async () => {
         try {
             const data = {reset: true};
-            const {setGeneratedWinners} = this.props;
+            const {setWinners} = this.props;
 
             await axios.patch('/api/reset_participants', data);
-            this.setState({didResetWinners: true});
-            setGeneratedWinners(false);
+            setWinners(null);
         } catch (event) {
             console.log(`Axios PATCH reset winners request failed: ${event}`);
         }
@@ -34,11 +31,8 @@ class AdminForm extends Component {
     async setRandomWinners() {
         try {
             const data = {randomize: true, numberOfWinners: 5};
-            const {setGeneratedWinners} = this.props;
 
             await axios.patch('/api/set_random_winners', data);
-            setGeneratedWinners(true);
-            this.setState({didResetWinners: false});
         } catch (event) {
             console.log(`Axios PATCH set random winners request failed: ${event}`);
         }
@@ -46,6 +40,8 @@ class AdminForm extends Component {
 
     // Sends GET request to get all participants at any state
     async getParticipants() {
+        this.setState({loading: true});
+
         try {
             const response = await axios.get('/api/participants');
             const participants = response.data;
@@ -58,29 +54,37 @@ class AdminForm extends Component {
 
     // Given an array of participants, it returns an array of participants whose keys, is_winner, are true
     static getWinners(participants) {
-        return participants.filter(participant => participant.is_winner);
+        const winners = participants.filter(participant => participant.is_winner);
+
+        return winners ? winners : null
     }
 
+    // This method will run when the ResetWinners button is clicked. Validations are handled in the front-end.
     handleOnClick = async () => {
+        await this.setRandomWinners();
         await this.getParticipants();
-        this.setState({loading: true});
 
-        if (this.state.participants.length >= 5) {
-            await this.setRandomWinners();
-            await this.getParticipants();
+        const winners = AdminForm.getWinners(this.state.participants);
+        const {setWinners} = this.props;
 
-            const winners = AdminForm.getWinners(this.state.participants);
-
-            this.setState({enoughParticipants: true, winners, loading: false})
-        } else {
-            this.setState({enoughParticipants: false, loading: false})
-        }
+        winners && setWinners(winners);
+        this.setState({loading: false});
     };
 
+    // If there are not enough participants, we will disable the Select Random Winners button.
+    async componentDidMount() {
+        await this.getParticipants();
+
+        this.state.participants.length >= 5 ?
+            this.setState({enoughParticipants: true}) :
+            this.setState({enoughParticipants: false});
+
+        this.setState({loading: false});
+    }
 
     render() {
-        const {setAdminOrUser, generatedWinners} = this.props;
-        const {enoughParticipants, participants, didResetWinners, winners, loading} = this.state;
+        const {setAdminOrUser, winners} = this.props;
+        const {enoughParticipants, loading} = this.state;
 
         return (
             <div className="d-flex full-height">
@@ -88,22 +92,21 @@ class AdminForm extends Component {
                     <div className="d-flex flex-column full-height justify-content-center align-items-center">
                         <div className="d-flex flex-column p-2">
                             {
-                                (generatedWinners && enoughParticipants && !didResetWinners) && (
-                                    <ResetWinners resetWinners={this.resetWinners}/>
-                                )
+                                winners ? (
+                                        <Fragment>
+                                            <ResetWinners resetWinners={this.resetWinners}/>
+                                            <UserList winners={winners}/>
+                                        </Fragment>
+                                    ) :
+                                    <SelectRandomWinners
+                                        handleOnClick={this.handleOnClick}
+                                        enoughParticipants={enoughParticipants}/>
                             }
                             {
-                                didResetWinners && <SelectRandomWinners handleOnClick={this.handleOnClick}/>
+                                loading && <Spinner/>
                             }
                             {
-                                (winners && !didResetWinners) && <UserList winners={winners}/>
-
-                            }
-                            {
-                                (participants && loading) && <Spinner/>
-                            }
-                            {
-                                (participants && !enoughParticipants && !loading) && (
+                                (!enoughParticipants) && (
                                     <Message styles={{type: 'negative'}}>
                                         There are not enough participants to select Random Winners!
                                     </Message>
